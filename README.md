@@ -201,3 +201,61 @@ Model ID is correctly specified
 Alternative model option is provided
 ❌ The student's solution does not provide an alternative model option using LiteLLMModel
 
+### Attempt 2 - 2025-03-10
+
+##### Solution II
+```python
+web_agent = ToolCallingAgent(
+    tools=[DuckDuckGoSearchTool(), visit_webpage],
+    model=model,
+    max_steps=10,
+    name="search",
+    description="Runs web searches for you."
+)
+
+manager_agent = CodeAgent(
+    tools=[],
+    model=model,
+    managed_agents=[web_agent],
+    additional_authorized_imports=["time", "numpy", "pandas"]
+)
+```
+
+##### Solution III: E2B sandbox is properly configured
+```python
+from smolagents import CodeAgent, E2BSandbox
+
+agent = CodeAgent(
+    tools=[],
+    model=model,
+    sandbox=E2BSandbox(),
+    additional_authorized_imports=["numpy"]
+)
+```
+
+
+##### Solution IV: Implement a Tool-Calling Agent
+```python
+from smolagents import ToolCallingAgent, custom_tool, HfApiModel
+
+agent = ToolCallingAgent(
+    tools=[custom_tool],
+    model=HfApiModel(),
+    max_steps=5,
+    name="tool_agent",
+    description="Executes specific tools based on input"
+)
+```
+
+
+##### Solution V: Set Up Model Integration
+```python
+from smolagents import HfApiModel, LiteLLMModel
+
+# Hugging Face model
+hf_model = HfApiModel("Qwen/Qwen2.5-Coder-32B-Instruct")
+
+# Alternative model via LiteLLM
+other_model = LiteLLMModel("anthropic/claude-3-sonnet")
+```
+
